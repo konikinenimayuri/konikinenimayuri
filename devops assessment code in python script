@@ -1,1 +1,22 @@
-python script
+#python script
+
+import subprocess
+
+# Define a list of checks to perform
+checks = [
+    {"name": "Check Git Version", "command": "git --version"},
+    {"name": "Check Jenkins Version", "command": "jenkins --version"},
+    {"name": "Check Ansible Version", "command": "ansible --version"},
+    {"name": "Check Docker Version", "command": "docker --version"},
+    {"name": "Check Kubernetes Version", "command": "kubectl version --short"}
+]
+
+# Perform each check and print the results
+for check in checks:
+    try:
+        result = subprocess.run(check["command"], shell=True, check=True,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print(f"{check['name']}: Success - {result.stdout.decode().strip()}")
+    except subprocess.CalledProcessError as e:
+        print(f"{check['name']}: Failed - {e.stderr.decode().strip()}")
+
