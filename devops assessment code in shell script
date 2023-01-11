@@ -1,1 +1,24 @@
+#!/bin/bash
+
+# Define a list of checks to perform
+checks=(
+    "Check Git Version: git --version"
+    "Check Jenkins Version: jenkins --version"
+    "Check Ansible Version: ansible --version"
+    "Check Docker Version: docker --version"
+    "Check Kubernetes Version: kubectl version --short"
+    "Check monitoring: curl --silent http://localhost:8000"
+)
+
+# Perform each check and print the results
+for check in "${checks[@]}"; do
+    name=$(echo $check | awk -F: '{print $1}')
+    command=$(echo $check | awk -F: '{print $2}')
+    output=$(eval "$command" 2>&1)
+    if [ $? -eq 0 ]; then
+        echo "$name: Success - $output"
+    else
+        echo "$name: Failed - $output"
+    fi
+done
 shell script
