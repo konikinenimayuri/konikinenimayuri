@@ -1,0 +1,42 @@
+import boto3
+
+# Create boto3 client for EC2
+ec2 = boto3.client('ec2')
+
+# Define the regions to spin up servers in
+region1 = "us-west-1"
+region2 = "us-east-1"
+
+# Define the image and instance type for the servers
+image_id = "ami-0ff8a91507f77f867" # Ubuntu 18.04 LTS
+instance_type = "t2.micro"
+
+# Spin up the first server in region1
+response = ec2.run_instances(
+    ImageId=image_id,
+    InstanceType=instance_type,
+    MinCount=1,
+    MaxCount=1,
+    Placement={
+        'AvailabilityZone': region1
+    }
+)
+
+# Get the instance ID of the first server
+instance_id1 = response['Instances'][0]['InstanceId']
+
+# Spin up the second server in region2
+response = ec2.run_instances(
+    ImageId=image_id,
+    InstanceType=instance_type,
+    MinCount=1,
+    MaxCount=1,
+    Placement={
+        'AvailabilityZone': region2
+    }
+)
+
+# Get the instance ID of the second server
+instance_id2 = response['Instances'][0]['InstanceId']
+
+print("Servers have been spun up successfully in regions {} and {} with instance IDs {} and {} respectively.".format(region1, region2, instance_id1, instance_id2))
